@@ -10,4 +10,20 @@ class City extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'slug'];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELATIONS
+    |--------------------------------------------------------------------------
+    */
+    
+    /**
+     * Returns all stops in a city
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stops()
+    {
+        return $this->hasMany(Stop::class);
+    }
 }

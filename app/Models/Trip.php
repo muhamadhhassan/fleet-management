@@ -27,4 +27,34 @@ class Trip extends Model
     {
         return $this->belongsTo(Bus::class);
     }
+
+    /**
+     * Returns all the stops of a trip
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stops()
+    {
+        return $this->hasMany(Stop::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Accessors
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Returns trip cities in a comma-separated string
+     *
+     * @return string
+     */
+    public function getStopsListAttribute(): string
+    {
+        $cities = $this->stops()->orderBy('order')->get()->map(function($stop) {
+            return $stop->city->name;
+        })->toArray();
+
+        return implode(', ', $cities);
+    }
 }
