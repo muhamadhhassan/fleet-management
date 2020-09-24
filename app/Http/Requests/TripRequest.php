@@ -24,7 +24,15 @@ class TripRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'bus_id' => 'required|exists:buses,id',
+            'stops.*' => 'required|distinct|exists:cities,id'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'stops.*.distinct' => 'A city can be added once'
         ];
     }
 }
