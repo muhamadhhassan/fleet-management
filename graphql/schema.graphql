@@ -16,8 +16,11 @@ type Mutation {
 extend type Mutation @guard {
   createTrip(input: CreateTripInput @spread): Trip @can(ability: "create")
     @field(resolver: "App\\GraphQL\\Mutations\\TripMutator@create")
+  createReservation(departureCityId: Int!, arrivalCityId: Int!): Reservation @can(ability: "create")
+    @field(resolver: "App\\GraphQL\\Mutations\\ReservationMutator@create")
   logout: User
     @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@logout")
 }
+
 #import models/*.graphql
 #import inputs/*.graphql

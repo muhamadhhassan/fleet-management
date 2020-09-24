@@ -1,0 +1,6 @@
+type Reservation {
+  id: Int!
+  departureStop: Stop!
+  arrivalStop: Stop!
+  seat: Seat!
+}
