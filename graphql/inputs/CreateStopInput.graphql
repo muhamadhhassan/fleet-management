@@ -1,0 +1,4 @@
+input CreateStopInput {
+  city_id: Int!,
+  order: Int!
+}

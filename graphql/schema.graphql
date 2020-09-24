@@ -14,6 +14,8 @@ type Mutation {
 }
 
 extend type Mutation @guard {
+  createTrip(input: CreateTripInput @spread): Trip @can(ability: "create")
+    @field(resolver: "App\\GraphQL\\Mutations\\TripMutator@create")
   logout: User
     @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@logout")
 }

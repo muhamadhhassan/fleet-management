@@ -1,0 +1,4 @@
+type Seat {
+  id: ID!
+  bus: Bus!
+}

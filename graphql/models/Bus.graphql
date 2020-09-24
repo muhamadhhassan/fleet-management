@@ -1,0 +1,5 @@
+type Bus {
+  id: ID!
+  plate_number: String!
+  seats: [Seat!]!
+}

@@ -1,0 +1,4 @@
+type Stop {
+  city: City!
+  order: Int!
+}
