@@ -20,5 +20,6 @@ The goal is to build a minimal fleet management system (bus-booking system) usin
 - run `npm i` then `npm run dev`
 - go to `http://localhost:8000`
 - the schema is available at `http://localhost:8000/graphql`
+- after seeding the database, the dashboard will be accessible with the email `admin@fleet.com` and `123456` as the password
 
 #### This repo is part of the hiring process at robusta.
