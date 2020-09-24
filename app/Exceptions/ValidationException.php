@@ -12,8 +12,6 @@ class ValidationException extends Exception implements RendersErrorsExtensions
     */
     protected $errors;
 
-    protected $code = 422;
-
     public function __construct(string $message, array $errors = [])
     {
         parent::__construct($message);
