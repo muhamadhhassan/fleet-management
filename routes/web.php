@@ -29,5 +29,9 @@ Route::group(['middleware' => 'auth'], function() {
         'prefix' => 'dashboard'
     ], function () {
         Route::name('index')->get('/', 'PagesController@index');
+
+        Route::name('trips.index')->get('trips', 'TripsController@index');
+        Route::name('trips.create')->get('trips/create', 'TripsController@create');
+        Route::name('trips.store')->post('trips', 'TripsController@store');
     });
 });
