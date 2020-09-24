@@ -34,4 +34,16 @@ Route::group(['middleware' => 'auth'], function() {
         Route::name('trips.create')->get('trips/create', 'TripsController@create');
         Route::name('trips.store')->post('trips', 'TripsController@store');
     });
+    
+    Route::group([
+        'middleware' => 'customer',
+        'as' => 'customer.',
+        'namespace' => 'Customer',
+    ], function () {
+        Route::name('index')->get('/', 'PagesController@index');
+
+        Route::name('reservations.index')->get('reservations', 'ReservationsController@index');
+        Route::name('reservations.create')->get('reservations/create', 'ReservationsController@create');
+        Route::name('reservations.store')->post('reservations', 'ReservationsController@store');
+    });
 });
