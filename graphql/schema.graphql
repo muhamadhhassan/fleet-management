@@ -5,7 +5,7 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
 type Query {
-  
+  users: [User!]! @all
 }
 
 type Mutation {
@@ -13,5 +13,9 @@ type Mutation {
     @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@login")
 }
 
+extend type Mutation @guard {
+  logout: User
+    @field(resolver: "App\\GraphQL\\Mutations\\AuthMutator@logout")
+}
 #import models/*.graphql
 #import inputs/*.graphql

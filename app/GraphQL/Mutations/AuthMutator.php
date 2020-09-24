@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\AuthException;
 use App\Exceptions\ValidationException;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,6 +28,14 @@ class AuthMutator
             'email' => $user->email,
             'token' => $token->plainTextToken
         ];
+    }
+
+    public function logout($_, array $args)
+    {
+        $user = auth()->user();
+        $user->currentAccessToken()->delete();
+        
+        return new UserResource($user);
     }
 
     protected function validateLogin($args)
