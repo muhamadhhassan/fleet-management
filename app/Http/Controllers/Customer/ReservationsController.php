@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Customer;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\ReservationRequest;
 use App\Models\City;
-use App\Models\Reservation;
 use App\Models\Seat;
 use App\Models\Stop;
 use App\Models\Trip;
+use App\Models\Reservation;
+use App\Http\Controllers\Controller;
+use App\Services\ReservationService;
+use App\Http\Requests\ReservationRequest;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class ReservationsController extends Controller
 {
@@ -49,62 +49,19 @@ class ReservationsController extends Controller
     {
         $departureCity = City::find($request->get('departure_stop_id'));
         $arrivalCity = City::find($request->get('arrival_stop_id'));
+        $reservationService = new ReservationService($departureCity, $arrivalCity);
+        $seatData = $reservationService->getSeat();
 
-        $departures = Stop::whereCityId($departureCity->id)->get();
-        if(!count($departures)) {
-            return redirect()->route('customer.reservations.create')->with('error', 'No trips are leaving from the selected city');
+        if(!$seatData) {
+            return redirect()->route('customer.reservations.create')->with('error', 'No available seats between these two cities');
         }
-
-        foreach ($departures as $departure) {
-            $arrivalStop = $this->tripToDestination($departure, $arrivalCity);
-            if ($arrivalStop) {
-                $seat = $this->availableSeat($departure->trip, $departure);
-                if ($seat) {
-                    auth()->user()->reservations()->create([
-                        'seat_id' => $seat->id,
-                        'departure_stop_id' => $departure->id,
-                        'arrival_stop_id' => $arrivalStop->id,
-                    ]);
-
-                    return redirect()->route('customer.reservations.index')->with('success', 'Your seat is booked successfully');
-                }
-            }
-        }
-
-        return redirect()->route('customer.reservations.create')->with('error', 'No trips are travelling to the selected city');
-    }
-
-    /**
-     * Return the possible arrival stop for a given departure point and city.
-     *
-     * @param Stop $departureStop
-     * @param City $arrivalCity
-     * @return Stop
-     */
-    protected function tripToDestination(Stop $departureStop, City $arrivalCity)
-    {
-        return $departureStop->trip
-            ->stops()
-            ->where('city_id', $arrivalCity->id)
-            ->where('order', '>', $departureStop->order)
-            ->first();
-    }
-
-    /**
-     * Returns an empty seat for in a trip by excluding the already booked seats.
-     *
-     * @param Trip $trip
-     * @param Stop $departureStop
-     * @return Seat
-     */
-    protected function availableSeat(Trip $trip, Stop $departureStop)
-    {
-        $bookedSeats = Reservation::whereHas('seat', function(Builder $q) use($trip) {
-            $q->whereBusId($trip->bus->id);
-        })->whereHas('arrivalStop', function (Builder $q) use($trip, $departureStop) {
-            $q->whereTripId($trip->id)->where('order', '>', $departureStop->order);
-        })->get(['seat_id']);
         
-        return $trip->bus->seats()->whereNotIn('id', $bookedSeats)->first();
+        auth()->user()->reservations()->create([
+            'seat_id' => $seatData['seat']->id,
+            'departure_stop_id' => $seatData['departureStop']->id,
+            'arrival_stop_id' => $seatData['arrivalStop']->id,
+        ]);
+        
+        return redirect()->route('customer.reservations.index')->with('success', 'Your seat is booked successfully');
     }
 }
