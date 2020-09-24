@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class TripMutator
 {
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
-    public function __invoke($_, array $args)
-    {
-        // TODO implement the resolver
-    }
-
     public function create($_, array $args)
     {
         $this->validateArgs($args);
@@ -27,7 +18,7 @@ class TripMutator
         }
 
         $trip = $bus->trips()->create();
-        foreach ($args['stops'] as $key => $stop) {
+        foreach ($args['stops'] as $stop) {
             $trip->stops()->create([
                 'city_id' => $stop['city_id'],
                 'order' => $stop['order']
@@ -41,8 +32,11 @@ class TripMutator
     {
         $validator = Validator::make($args, [
             'bus_id' => 'required|exists:buses,id',
-            'stops.*.city_id' => 'required|exists:cities,id',
-            'stops.*.order' => 'required|numeric|min:1',
+            'stops.*.city_id' => 'required|exists:cities,id|distinct',
+            'stops.*.order' => 'required|numeric|min:1|distinct',
+        ], [
+            'stops.*.city_id.distinct' => 'A city can be added once',
+            'stops.*.order.distinct' => 'Two cities has the same order',
         ]);
 
         if ($validator->fails()) {
