@@ -9,6 +9,7 @@ extend type Query @guard {
   user(id: ID! @eq): User @find @can(ability: "view" find: id)
   reservations: [Reservation!]
     @field(resolver: "App\\GraphQL\\Queries\\ReservationsQuery")
+  trips: [Trip!] @all @can(ability: "viewAny")
 }
 
 type Mutation {

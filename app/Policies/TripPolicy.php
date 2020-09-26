@@ -18,7 +18,7 @@ class TripPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return $user->is_admin;
     }
 
     /**
@@ -30,7 +30,7 @@ class TripPolicy
      */
     public function view(User $user, Trip $trip)
     {
-        //
+        return $user->is_admin;
     }
 
     /**
