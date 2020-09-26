@@ -7,6 +7,8 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 extend type Query @guard {
   users: [User!]! @all @can(ability: "viewAny")
   user(id: ID! @eq): User @find @can(ability: "view" find: id)
+  reservations: [Reservation!]
+    @field(resolver: "App\\GraphQL\\Queries\\ReservationsQuery")
 }
 
 type Mutation {
