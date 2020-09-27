@@ -1,4 +1,5 @@
 type Trip {
+  id: ID!
   bus: Bus!
   stops: [Stop!]
 }
