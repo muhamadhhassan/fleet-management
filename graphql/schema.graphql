@@ -10,6 +10,8 @@ extend type Query @guard {
   reservations: [Reservation!]
     @field(resolver: "App\\GraphQL\\Queries\\ReservationsQuery")
   trips: [Trip!] @all @can(ability: "viewAny")
+  buses: [Bus] @all
+  cities: [City] @all
 }
 
 type Mutation {
